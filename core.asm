@@ -100,40 +100,33 @@ core:
          jmp     .read
 
 .G_order:
-	       push	   rdi ;
-         push    rcx ;
-         push    rsi ;
-	       mov	   r13, rsp ;
-	       and	   rsp, ~0xF ;
+	       push	   rdi
+         push    rcx
+         push    rsi
+	       mov	   r13, rsp
+	       and	   rsp, ~0xF
 	       call	   get_value
-	       mov	   rsp, r13 ;
-         pop     rsi ; 
-         pop     rcx ;
-	       pop	   rdi ;
+	       mov	   rsp, r13
+         pop     rsi
+         pop     rcx
+	       pop	   rdi
 	       push	   rax
-         jmp     .read ;
+         jmp     .read
 
 .P_order:
          pop     rdx                             ; Zdejmujemy uint64_t w.
-         push	   rdi ;
-         push    rcx ;
-         push    rsi ;
+         push	   rdi
+         push    rcx
+         push    rsi
          mov     rsi, rdx                        ; Zapisujemy je jako drugi argument.
-	       mov	   r13, rsp ;
-	       and	   rsp, ~0xF ;
+	       mov	   r13, rsp
+	       and	   rsp, ~0xF
 	       call	   put_value
 	       mov	   rsp, r13
          pop     rsi
          pop     rcx
 	       pop	   rdi
          jmp     .read
-
-.P_and_G_beg:
-         push	   rdi ;
-         push    rcx ;
-         push    rsi ;
-	       mov	   r13, rsp ;
-	       and	   rsp, ~0xF ;
 
 .S_order:
          pop     rax                          ; m = rax = top(s), pop(s).
@@ -143,6 +136,7 @@ core:
          mov     qword [r9+rdi*8], rax        ; synchro[n] = m.
 
 .spin_lock_mn:
+         ;mov     r10, qword [r9+rax*8]
          cmp     qword [r9+rax*8], rdi        ; while (synchro[m] != n).
          jnz     .spin_lock_mn
 
@@ -151,8 +145,8 @@ core:
          mov     qword [r9+rax*8], N          ; synchro[m] = N.
 
 .spin_lock_nN:
-         mov     r10, qword [r9+rdi*8]
-         cmp     r10, N          ; while (synchro[n] != N).
+         ;mov     r10, qword [r9+rdi*8]
+         cmp     qword [r9+rdi*8], N          ; while (synchro[n] != N).
          jnz     .spin_lock_nN
 
 .S_order_end:
@@ -161,6 +155,6 @@ core:
 .end:
          pop     rax
          mov     rsp, r12
-         pop   r12
-         pop   r13
+         pop     r12
+         pop     r13
          ret
