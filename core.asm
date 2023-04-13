@@ -4,8 +4,10 @@ extern put_value
 
 section .data
 
+align 8
 values: times N dq N                  ; N-size array filled with N values at the beginning. It will help us with S operation because need 
                                       ; a place to store values to switch between two cores.
+align 8
 synchro: times N dq N                 ; N-size array filled with N values at the beginning. It will help us with S operation because
 
 ; rdi - uint64_t n
@@ -17,13 +19,7 @@ core:
          push    r12
          mov     r12, rsp 
          xor     rcx, rcx
-
-.read:                                ; We will read next command into dx (rdx). rcx will be an iterator over p array.
-         xor     rdx, rdx             ; Clearing potential garbage value in rdx.
-         movzx   edx, byte [rsi + rcx]  ; Moving p[rcx] character to dl.
-         test    dl, dl               ; Testing if we encountered null terminating character.
-         jz      .end                 ; If so, the core has ended it's work.
-         inc     rcx                  ; Increasing our iterator.
+         jmp     .read
 
 .check_if_digit:                        ; Checks if char loaded into dl register represents a digit. 
                                         ; If so, we translate it into digit by subtracting 0x30 and push onto the stack.
@@ -61,6 +57,13 @@ core:
          add     qword [rsp], rdx                ; Adding that value to the value on top of the stack.
          jmp     .read
 
+.end:
+         pop     rax
+         mov     rsp, r12
+         pop     r12
+         pop     r13
+         ret
+
 .mult_order:
          pop     rdx                             ; Poping value from the top of the stack into rdx.
          pop     rax                             ; Poping value from the top of the stack into rax.
@@ -87,10 +90,19 @@ core:
          pop     rdx
          jmp     .read
 
+
 .D_order:
          mov     rdx, qword [rsp]
          push    rdx
          jmp     .read
+
+.read:                                ; We will read next command into dx (rdx). rcx will be an iterator over p array.
+         xor     rdx, rdx             ; Clearing potential garbage value in rdx.
+         movzx   edx, byte [rsi + rcx]  ; Moving p[rcx] character to dl.
+         test    dl, dl               ; Testing if we encountered null terminating character.
+         jz      .end                 ; If so, the core has ended it's work.
+         inc     rcx                  ; Increasing our iterator.
+         jmp     .check_if_digit
 
 .E_order:
          pop     rdx
@@ -151,10 +163,3 @@ core:
 
 .S_order_end:
          jmp     .read
-
-.end:
-         pop     rax
-         mov     rsp, r12
-         pop     r12
-         pop     r13
-         ret
