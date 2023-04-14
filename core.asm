@@ -146,19 +146,18 @@ core:
          pop     qword [r8+rdi*8]             ; values[n] = top(s), pop(s).
          lea     r9, [rel synchro]            ; r9 = synchro.
          mov     qword [r9+rdi*8], rax        ; synchro[n] = m.
+         mov     r10, N
 
 .spin_lock_mn:
-         ;mov     r10, qword [r9+rax*8]
          cmp     qword [r9+rax*8], rdi        ; while (synchro[m] != n).
          jnz     .spin_lock_mn
 
 .S_order_continue:
          push    qword [r8+rax*8]             ; top(s) = values[m].
-         mov     qword [r9+rax*8], N          ; synchro[m] = N.
+         mov     qword [r9+rax*8], r10          ; synchro[m] = N.
 
 .spin_lock_nN:
-         ;mov     r10, qword [r9+rdi*8]
-         cmp     qword [r9+rdi*8], N          ; while (synchro[n] != N).
+         cmp     qword [r9+rdi*8], r10         ; while (synchro[n] != N).
          jnz     .spin_lock_nN
 
 .S_order_end:
