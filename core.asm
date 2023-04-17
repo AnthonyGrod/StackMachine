@@ -111,17 +111,17 @@ core:
         jmp     .read
 
 .G_order:
-	    push	rdi
+	push	rdi
         push    rcx
         push    rsi
-	    mov	    r13, rsp
-	    and	    rsp, ~0xF
-	    call	get_value
-	    mov	    rsp, r13
+	mov	r13, rsp
+	and	rsp, ~0xF
+	call	get_value
+	mov	rsp, r13
         pop     rsi
         pop     rcx
-	    pop	    rdi
-	    push	rax
+	pop	rdi
+	push	rax
         jmp     .read
 
 .P_order:
@@ -130,13 +130,13 @@ core:
         push    rcx
         push    rsi
         mov     rsi, rdx                    ; Zapisujemy je jako drugi argument.
-	    mov	    r13, rsp
-	    and	    rsp, ~0xF
-	    call	put_value
-	    mov	    rsp, r13
+	mov	r13, rsp
+	and	rsp, ~0xF
+	call	put_value
+	mov	rsp, r13
         pop     rsi
         pop     rcx
-	    pop	    rdi
+	pop	rdi
         jmp     .read
 
 .S_order:
