@@ -1,9 +1,10 @@
 # StackMachine
 Stack machine assembly module which allows concurrent stack operations execution. Available operations:
-++ Take two values from the stack, calculate their sum, and push the result onto the stack.
 
-** Take two values from the stack, calculate their product, and push the result onto the stack.
--- Negate the value on the top of the stack.
+\+ Take two values from the stack, calculate their sum, and push the result onto the stack.
+
+\* Take two values from the stack, calculate their product, and push the result onto the stack.
+- Negate the value on the top of the stack.
 
 0 to 9 - Push the respective value (0 to 9) onto the stack.
 
