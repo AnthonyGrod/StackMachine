@@ -2,7 +2,7 @@
 Stack machine assembly module which allows concurrent stack operations execution. Available operations:
 + Take two values from the stack, calculate their sum, and push the result onto the stack.
 * Take two values from the stack, calculate their product, and push the result onto the stack.
-- Negate the value on the top of the stack.
+-- Negate the value on the top of the stack.
 0 to 9 - Push the respective value (0 to 9) onto the stack.
 n - Push the core number onto the stack.
 B - Take a value from the stack. If the value on the top of the stack is not zero, treat the taken value as a two's complement number and shift operations by that many positions.
